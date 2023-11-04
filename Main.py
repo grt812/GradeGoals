@@ -11,11 +11,6 @@ app = Flask(__name__)   # Flask constructor
 @app.route("/")
 def mainpage():
      return send_from_directory("static", "index.html")
-
-
-@app.route('/')       
-def hello(): 
-    return 'HELLO'
   
 if __name__=='__main__': 
-   app.run(host="0.0.0.0") 
+   app.run(host="0.0.0.0", port=80) 
