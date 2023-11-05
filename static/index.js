@@ -39,7 +39,7 @@ $(function(){
         $("#category-input")[0].focus();
     });
     $("#category-input").keypress(function(e){
-        if(e.keyCode == 13){
+        if(e.keyCode == 13 && $("#category-input").val().length >=2){
             $(this).hide(500);
             $("#add-category").show(500);
             let categoryValue = $("#category-input").val();
@@ -54,7 +54,7 @@ $(function(){
                                 </div>
                                 <div class="">
                                     <button id="add-score-${categoryValue}">Add Assignment+</button>
-                                    <button>Add Predicted Assignment+</button>
+                                    <button id="add-predicted-${categoryValue}">Add Predicted Assignment+</button>
                                 </div>
                             </div>
                             <div class="right-col">
@@ -72,7 +72,12 @@ $(function(){
                     </div>
                 `);
                 $("#delete-category-"+categoryValue).click(function(){
-                    $(this).parents("#category-container").first().remove();
+                    $(`#category-${categoryValue}`).hide(500);
+                    let $this = $(this);
+                    setTimeout(function(){
+                        $this.parents(`#category-${categoryValue}`).first().remove();
+                        console.log("")
+                    }, 500);
                 });
                 $("#add-score-"+categoryValue).click(function(){
                     let scoreID = Date.now();
@@ -115,15 +120,14 @@ function predict_grade(
 	let possible_subscore = 0;
 	let expected_subscore = 0;
 
-
 	for (let cat in all_gradeables) {
 		let asig_score = 0;
 		let asig_possible = 0;
 		for(let asig in all_gradeables[cat]){
-			asig_score += asig[0];
-			asig_possible += asig[1];
+			asig_score += all_gradeables[cat][asig][0];
+			asig_possible += all_gradeables[cat][asig][1];
 		}
-		if(cat==predict_category){
+      	if(cat==predict_category){
 			continue;
 		}
 		if(future_assignments[cat].length==0){
@@ -132,22 +136,27 @@ function predict_grade(
 		}
 		else{
 			for(let asig in future_assignments[cat]){
-				asig_score += asig * remaining_avg[cat];
-				asig_possible += asig;
+				asig_score += future_assignments[cat][asig] * remaining_avg[cat];
+				asig_possible += future_assignments[cat][asig];
 			}
 		}
-		possible_subscore += asig_possible[cat];
-		expected_subscore += asig_score[cat];
-		tot_points += asig_possible[cat];
+		possible_subscore += asig_possible;
+		expected_subscore += asig_score;
+		tot_points += asig_possible;
 	}
 	
 	for(let asig in all_gradeables[predict_category]){
-		tot_points += asig;
+		tot_points += all_gradeables[predict_category][asig][1];
 	}
 
 	let required_tot = tot_points * grade_goal;
 	let required_rem = required_tot - expected_subscore;
 	let required_avg = required_rem / (tot_points - possible_subscore);
+      console.log(tot_points);
+      console.log(required_tot);
+      console.log(possible_subscore);
+      console.log(expected_subscore);
+      console.log(required_rem);
 
 	return required_avg;
 }

@@ -206,7 +206,7 @@ button:active{
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--dark-green);
+    background-color: var(--green);
     -webkit-transition: .4s;
     transition: .4s;
   }
@@ -224,7 +224,7 @@ button:active{
   }
   
   input:checked + .slider {
-    background-color: var(--green);
+    background-color: var(--dark-green);
   }
   
   /* input:focus + .slider {
