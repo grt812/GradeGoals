@@ -1,4 +1,4 @@
-let categoryHTML = `
+let UNUSED = `
 <div id="category-container">
         <div id="" class="category">
             <h1>Assignment</h1>
@@ -22,7 +22,7 @@ let categoryHTML = `
                         <input type="checkbox" checked>
                         <span class="slider round"></span>
                     </label>
-                    <input type="text" placeholder="Average future score on \"${categoryValue}\"">
+                    <input type="text" placeholder="Average future score on <thing>">
                 </div>
             </div>
             <div>
@@ -69,7 +69,7 @@ $(function(){
                                 <input id="predicted-${categoryValue}" type="checkbox" checked>
                                 <span class="slider round"></span>
                             </label>
-                            <input id="predicted-num-${categoryValue}" type="text" placeholder="Predicted ${categoryValue} %">
+                            <input id="predicted-num-${categoryValue}" type="text" placeholder="Average future score on ${categoryValue} %">
                         </div>
                     </div>
                     <div>
@@ -77,9 +77,9 @@ $(function(){
                     </div>
                 </div>
             `);
-            dictOfCategories[categoryValue]["predictedValue"] = $(`#predicted-num-${categoryValue}`).val();
+            dictOfCategories[categoryValue]["predictedValue"] = Number($(`#predicted-num-${categoryValue}`).val())/100;
             $(`#predicted-num-${categoryValue}`).change(function(e){
-                dictOfCategories[categoryValue]["predictedValue"] = $(this).val();
+                dictOfCategories[categoryValue]["predictedValue"] = Number($(this).val())/100;
             });
             console.log("exist: " + $(`#predicted-${categoryValue}`)[0]);
             dictOfCategories[categoryValue]["predictedCategory"] = !$(`#predicted-${categoryValue}`).is(":checked");
@@ -116,7 +116,7 @@ $(function(){
 
                     dictOfCategories[categoryValue]["assignments"][specificID][0] = $("#"+scoreNumerator).val();
                     dictOfCategories[categoryValue]["assignments"][specificID][1] = $("#"+scoreDenominator).val();
-                    let gradePrediction = predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), $("#grade-goal").val(), $("#overall-grade"));
+                    let gradePrediction = predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
                     console.log("this is the answer" + gradePrediction);
                     // $("#overall-grade").text(gradePrediction);
                     
@@ -124,7 +124,7 @@ $(function(){
                 $(`#delete-${specificID}`).click(function(){
                     $(this).parent().remove();
                     delete dictOfCategories[categoryValue];
-                    let gradePrediction = predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), $("#grade-goal").val(), $("#overall-grade"));
+                    let gradePrediction = predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
                     console.log("this is the answer" + gradePrediction);
                     // $("#overall-grade").text(gradePrediction);
                 });
