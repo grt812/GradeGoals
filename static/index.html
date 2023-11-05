@@ -4,8 +4,13 @@
     <title>GradeGoal</title>
     <meta name="description" content="What grade do you need to get in your next assignment to reach your GradeGoal
     grade">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="./static/index.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="static/index.js"></script>
 </head>
 <body>
     <header>
@@ -19,6 +24,7 @@
         <a class="contact">Contact</a>       
     </header>
     <div id="header-filler"></div>
+
     <!-- <img id="import_button" src="static/import_icon.webp" alt="Interactive Image"> -->
     <!-- <p><a href="subdir4/file11.html">file11.html</a></p>
     <p><a href="file8.html">file8.html</a></p>
@@ -29,36 +35,43 @@ Available to buy
 What’s Included in the Price of a Disney Cruise
 From the moment you step on board to your last wave goodbye, a Disney cruise includes almost everything you could hope for—larger-than-life entertainment, outstanding dining, spacious accommodations, dazzling destinations and more—with most experiences included in the price of your cruise.
 <last-updated>July 16, 2015</last-updated> -->
-    <div class="category">
-        <h1>Assignments</h1>
-        <div class="score-container">
-            <div class="score">
-                <input class="" type="text" placeholder="Assignment Score" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
-                <input class="" type="text" placeholder="Total Score" size="14">&nbsp;&nbsp;&nbsp;
-                <button>Delete</button>
-            </div>
-            <div class="score">
-                <input class="" type="text" placeholder="Assignment Score" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
-                <input class="" type="text" placeholder="Total Score" size="14">&nbsp;&nbsp;&nbsp;
-                <button>Delete</button>
-            </div> 
-            <div class="score">
-                <input class="" type="text" placeholder="Assignment Score" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
-                <input class="" type="text" placeholder="Total Score" size="14">&nbsp;&nbsp;&nbsp;
-                <button>Delete</button>
-            </div>
-        </div>
-        <button>Add Assignment+</button>
-    </div>
-    <div class="category">
-        <h1>Assignments</h1>
-        <div class="score">
-            <input class="" type="text" placeholder="Assignment Score"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
-            <input class="" type="text" placeholder="Total Score">
-        </div>
-        <button>Add Assignment+</button>
-    </div>
-    <button>Add category</button>
 
-</body>
+    <div id="category-container">
+        <div id="" class="category">
+                <h1>Assignment</h1>
+                <div class="d-flex">
+                    <div class="left-col">
+                        <div class="score-container">
+                            <div class="score">
+                                <input class="" type="text" placeholder="Points Earned" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
+                                <input  class="" type="text" placeholder="Points Possible" size="14">&nbsp;&nbsp;&nbsp;
+                                <button>Delete</button>
+                            </div>
+                        </div>
+                        <div class="">
+                            <button>Add Predicted+</button>
+                            <button>Add Predicted Assignent+</button>
+                        </div>
+                    </div>
+                    <div class="right-col">
+                        Predict Category
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        <input type="text" placeholder="Predicted Category %">
+                    </div>
+                </div>
+                <div>
+                    <button class="delete-category"><span class="material-symbols-outlined"> close </span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="category-menu">
+        <input id="category-input" type="text">
+        <button id="add-category">Add category+</button>
+    </div>
+
+    </body>
 </html>
