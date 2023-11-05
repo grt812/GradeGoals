@@ -1,14 +1,34 @@
 let categoryHTML = `
-<div id=${""} class="category">
-        <h1>${""}</h1>
-        <div class="score-container">
-            <div id=${""} class="score">
-                <input id=${""} class="" type="text" placeholder="Points Earned" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
-                <input id=${""} class="" type="text" placeholder="Points Possible" size="14">&nbsp;&nbsp;&nbsp;
-                <button id=${""}>Delete</button>
+<div id="category-container">
+        <div id="" class="category">
+            <h1>Assignment</h1>
+            <div class="d-flex">
+                <div class="left-col">
+                    <div class="score-container">
+                        <div class="score">
+                            <input class="" type="text" placeholder="Points Earned" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
+                            <input  class="" type="text" placeholder="Points Possible" size="14">&nbsp;&nbsp;&nbsp;
+                            <button>Delete</button>
+                        </div>
+                    </div>
+                    <div class="">
+                        <button>Add Predicted+</button>
+                        <button>Add Predicted Assignent+</button>
+                    </div>
+                </div>
+                <div class="right-col">
+                    Predict Category
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                    <input type="text" placeholder="Predicted Category %">
+                </div>
+            </div>
+            <div>
+                <button class="delete-category"><span class="material-symbols-outlined"> close </span></button>
             </div>
         </div>
-        <button id=${""}>Add Assignment+</button>
     </div>
 `;
 $(function(){
@@ -16,6 +36,7 @@ $(function(){
     $("#add-category").click(function(){
         $(this).hide(500);
         $("#category-input").show(500);
+        $("#category-input")[0].focus();
     });
     $("#category-input").keypress(function(e){
         if(e.keyCode == 13){
@@ -23,14 +44,37 @@ $(function(){
             $("#add-category").show(500);
             let categoryValue = $("#category-input").val();
             if(!dictOfCategories.hasOwnProperty(categoryValue)){
+                dictOfCategories[categoryValue] = "";
                 $("#category-container").append(`
-                        <div id="category-${categoryValue}" class="category">
-                            <h1>${categoryValue}</h1>
-                            <div id="score-container-${categoryValue}" class="score-container"></div>
-                            <button id="add-${categoryValue}">Add ${categoryValue}+</button>
+                    <div id="category-${categoryValue}" class="category">
+                        <h1>${categoryValue}</h1>
+                        <div class="d-flex">
+                            <div class="left-col">
+                                <div id="score-container-${categoryValue}" class="score-container">
+                                </div>
+                                <div class="">
+                                    <button id="add-score-${categoryValue}">Add Assignment+</button>
+                                    <button>Add Predicted Assignment+</button>
+                                </div>
+                            </div>
+                            <div class="right-col">
+                                Predict Category
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider round"></span>
+                                </label>
+                                <input type="text" placeholder="Predicted Category %">
+                            </div>
                         </div>
+                        <div>
+                            <button id="delete-category-${categoryValue}" class="delete-category"><span class="material-symbols-outlined"> close </span></button>
+                        </div>
+                    </div>
                 `);
-                $("#add-"+categoryValue).click(function(){
+                $("#delete-category-"+categoryValue).click(function(){
+                    $(this).parents("#category-container").first().remove();
+                });
+                $("#add-score-"+categoryValue).click(function(){
                     let scoreID = Date.now();
                     $(`#score-container-${categoryValue}`).append(`
                     <div id=score-${categoryValue}-${scoreID} class="score">
@@ -43,6 +87,8 @@ $(function(){
                         $(this).parent().remove();
                     });
                 });   
+                $("#add-category")[0].focus();
+                $("#category-input").val("");
             } 
         }
     });
