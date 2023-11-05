@@ -4,39 +4,23 @@
     <title>GradeGoal</title>
     <meta name="description" content="What grade do you need to get in your next assignment to reach your GradeGoal
     grade">
+    <link rel="stylesheet" href="./static/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 <body>
     <header>
-        <a class="Website-name"><span style="font-size: 48px;">GG </span>
-            <span style="font-size: 28px;">Grade Goal</span>
-        </a>
-        <div class="menu">
-            <a class="about">About</a>
-            <a class="contact">Contact</a>
-           </div>
-      
-       
+        <div class="flex-grow">
+            <!-- <span id="logo">GG </span> -->
+            <a id="Website-name">
+                Grade Goal
+            </a>
+        </div>
+        <a class="about">About</a>
+        <a class="contact">Contact</a>       
     </header>
-    
-    <style>
-        header{
-        display: flex;
-        padding: 30px;
-        text-align: center;
-        background: #1abc9c;
-        color: white;
-        font-size: 30px;
-        justify-content: space-between;
-        }
-     
-    </style>
-    <img id="import_button" src="static/import_icon.webp" alt="Interactive Image">
-    <style>
-        body {
-          background-color: lightblue;
-        }
-    </style>
-    <p><a href="subdir4/file11.html">file11.html</a></p>
+    <div id="header-filler"></div>
+    <!-- <img id="import_button" src="static/import_icon.webp" alt="Interactive Image"> -->
+    <!-- <p><a href="subdir4/file11.html">file11.html</a></p>
     <p><a href="file8.html">file8.html</a></p>
     S1 E17 - Johann Mouse
 A narrator tells the story of a Waltzing mouse named Johann (Jerry) lived in Vienna in Johann Strauss home. Tom try to catch the mouse each time he's dancing but a day in absence of Johann Strauss, Tom decided to learn to playing piano for catch him. S1 E18 - Tom and Jerry in the Hollywood Bowl September 15, 1950 7min. ALL Jerry wants to help Tom out as a conductor at the Hollywood Bowl but the cat is having none of it.
@@ -44,5 +28,37 @@ Available to buy
 
 What’s Included in the Price of a Disney Cruise
 From the moment you step on board to your last wave goodbye, a Disney cruise includes almost everything you could hope for—larger-than-life entertainment, outstanding dining, spacious accommodations, dazzling destinations and more—with most experiences included in the price of your cruise.
-<last-updated>July 16, 2015</last-updated></body>
+<last-updated>July 16, 2015</last-updated> -->
+    <div class="category">
+        <h1>Assignments</h1>
+        <div class="score-container">
+            <div class="score">
+                <input class="" type="text" placeholder="Assignment Score" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
+                <input class="" type="text" placeholder="Total Score" size="14">&nbsp;&nbsp;&nbsp;
+                <button>Delete</button>
+            </div>
+            <div class="score">
+                <input class="" type="text" placeholder="Assignment Score" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
+                <input class="" type="text" placeholder="Total Score" size="14">&nbsp;&nbsp;&nbsp;
+                <button>Delete</button>
+            </div> 
+            <div class="score">
+                <input class="" type="text" placeholder="Assignment Score" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
+                <input class="" type="text" placeholder="Total Score" size="14">&nbsp;&nbsp;&nbsp;
+                <button>Delete</button>
+            </div>
+        </div>
+        <button>Add Assignment+</button>
+    </div>
+    <div class="category">
+        <h1>Assignments</h1>
+        <div class="score">
+            <input class="" type="text" placeholder="Assignment Score"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
+            <input class="" type="text" placeholder="Total Score">
+        </div>
+        <button>Add Assignment+</button>
+    </div>
+    <button>Add category</button>
+
+</body>
 </html>
