@@ -110,12 +110,15 @@ $(function(){
                 $(`#score-${specificID}`).change(function(){
                     dictOfCategories[categoryValue][specificID][0] = $("#"+scoreNumerator).val();
                     dictOfCategories[categoryValue][specificID][1] = $("#"+scoreDenominator).val();
-                    predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), $("#grade-goal").val());
+                    let gradePrediction = predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), $("#grade-goal").val());
+                    $("#overall-grade").val(gradePrediction);
+                    
                 });
                 $(`#delete-${specificID}`).click(function(){
                     $(this).parent().remove();
                     delete dictOfCategories[categoryValue];
-                    predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val());
+                    let gradePrediction = predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val());
+                    $("#overall-grade").val(gradePrediction);
                 });
             });   
             $("#add-category")[0].focus();
