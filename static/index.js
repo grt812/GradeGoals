@@ -39,6 +39,9 @@ let UNUSED = `
 
 
 $(function(){
+    //Default dates
+    $("#start-date")[0].valueAsDate = new Date("08-28-23");
+    $("#end-date")[0].valueAsDate = new Date("12-08-23");
     let dictOfCategories = {};
     $("#add-category").click(function(){
         $(this).hide(500);
@@ -66,10 +69,10 @@ $(function(){
                         <div class="right-col">
                             Autofill grades:
                             <label class="switch">
-                                <input id="predicted-${categoryValue}" type="checkbox" checked>
+                                <input id="predicted-${categoryValue}" type="checkbox">
                                 <span class="slider round"></span>
                             </label>
-                            <input id="predicted-num-${categoryValue}" type="text" placeholder="Average future score on ${categoryValue} %">
+                            <input id="predicted-num-${categoryValue}" type="text" placeholder="Average going forward (%)">
                         </div>
                     </div>
                     <div>
@@ -78,35 +81,78 @@ $(function(){
                 </div>
             `);
             dictOfCategories[categoryValue]["predictedValue"] = Number($(`#predicted-num-${categoryValue}`).val())/100;
-            $(`#predicted-num-${categoryValue}`).change(function(e){
+            $(`#predicted-num-${categoryValue}`).on("change keypress", function(e){
                 dictOfCategories[categoryValue]["predictedValue"] = Number($(this).val())/100;
+                if($(`#predicted-num-${categoryValue}`).val()==""){
+                    let cur = 0;
+                    let tot = 0;
+                    for(let asig in dictOfCategories[categoryValue]["assignments"]){
+                        cur += Number(dictOfCategories[categoryValue]["assignments"][asig][0]);
+                        tot += Number(dictOfCategories[categoryValue]["assignments"][asig][1]);
+                    }
+                    $(`predicted-num-${categoryValue}`) .val(cur/tot);    
+                    dictOfCategories[categoryValue]["predictedValue"] = cur / tot;  
+                    console.log(cur + "   " + tot);          
+                }
+                predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
             });
-            console.log("exist: " + $(`#predicted-${categoryValue}`)[0]);
             dictOfCategories[categoryValue]["predictedCategory"] = !$(`#predicted-${categoryValue}`).is(":checked");
+            $(`#predicted-num-${categoryValue}`).hide();
             $(`#predicted-${categoryValue}`).change(function(e){
-				dictOfCategories[categoryValue]["predictedCategory"] = !$(this).is(":checked");
+                if($(this).is(":checked")){
+                    $(`#predicted-num-${categoryValue}`).show();
+                } else {
+                    $(`#predicted-num-${categoryValue}`).hide();
+                }
+                dictOfCategories[categoryValue]["predictedCategory"] = !$(this).is(":checked");
+                if($(`#predicted-num-${categoryValue}`).val()==""){
+                    let cur = 0;
+                    let tot = 0;
+                    for(let asig in dictOfCategories[categoryValue]["assignments"]){
+                        cur += Number(dictOfCategories[categoryValue]["assignments"][asig][0]);
+                        tot += Number(dictOfCategories[categoryValue]["assignments"][asig][1]);
+                    }
+                    $(`predicted-num-${categoryValue}`) .val(cur/tot);    
+                    dictOfCategories[categoryValue]["predictedValue"] = cur / tot;  
+                    console.log(cur + "   " + tot);          
+                }
+                predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
             });
             $("#delete-category-"+categoryValue).click(function(){
                 $(`#category-${categoryValue}`).hide(500);
                 let $this = $(this);
-                
+                delete dictOfCategories[categoryValue];
+                predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
                 setTimeout(function(){
                     $this.parents(`#category-${categoryValue}`).first().remove();
                 }, 500);
             });
-            $("#add-score-"+categoryValue).click(function(){
+            $("#grade-goal").on("change keypress", function(e){
+                predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
+            });
+            $("#add-score-"+categoryValue+", "+"#add-predicted-"+categoryValue).click(function(){
                 let scoreID = Date.now();
                 let specificID = `${categoryValue}-${scoreID}`;
                 let scoreNumerator = "numerator-" + specificID;
                 let scoreDenominator = "denominator-" + specificID;
-                $(`#score-container-${categoryValue}`).append(`
-                <div id="score-${specificID}" class="score">
-                    <input id=${scoreNumerator} class="" type="text" placeholder="Points Earned" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
-                    <input id=${scoreDenominator} class="" type="text" placeholder="Points Possible" size="14">&nbsp;&nbsp;&nbsp;
-                    <button id="delete-${specificID}">Delete</button>
-                </div>
-                `);
-                $(`#score-${specificID}`).change(function(){
+                if($(this).attr("id") == "add-score-" + categoryValue){
+                    $(`#score-container-${categoryValue}`).append(`
+                    <div id="score-${specificID}" class="score">
+                        <input id=${scoreNumerator} class="" type="text" placeholder="Points Earned" size="14"> &nbsp;&nbsp;&nbsp;out of&nbsp; &nbsp;&nbsp;
+                        <input id=${scoreDenominator} class="" type="text" placeholder="Points Possible" size="14">&nbsp;&nbsp;&nbsp;
+                        <button id="delete-${specificID}">Delete</button>
+                    </div>
+                    `);
+                } else {
+                    $(`#score-container-${categoryValue}`).append(`
+                    <div id="score-${specificID}" class="score generated">
+                        <input id=${scoreNumerator} class="hidden" type="text" placeholder="Points Earned" size="14" value="-1">
+                        <input id=${scoreDenominator} class="" type="text" placeholder="Points Possible" size="14">&nbsp;&nbsp;&nbsp;
+                        <button id="delete-${specificID}">Delete</button>
+                    </div>
+                    `);
+                }
+                $(`#score-${specificID}`).on("change keypress", function(e){
 					if(!dictOfCategories[categoryValue].hasOwnProperty("assignments")){
                         dictOfCategories[categoryValue]["assignments"] = {};
                     }
@@ -116,17 +162,35 @@ $(function(){
 
                     dictOfCategories[categoryValue]["assignments"][specificID][0] = $("#"+scoreNumerator).val();
                     dictOfCategories[categoryValue]["assignments"][specificID][1] = $("#"+scoreDenominator).val();
-                    let gradePrediction = predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
-                    console.log("this is the answer" + gradePrediction);
-                    // $("#overall-grade").text(gradePrediction);
+                    if($(`#predicted-num-${categoryValue}`).val()==""){
+                        let cur = 0;
+                        let tot = 0;
+                        for(let asig in dictOfCategories[categoryValue]["assignments"]){
+                            cur += Number(dictOfCategories[categoryValue]["assignments"][asig][0]);
+                            tot += Number(dictOfCategories[categoryValue]["assignments"][asig][1]);
+                        }
+                        $(`predicted-num-${categoryValue}`) .val(cur/tot);    
+                        dictOfCategories[categoryValue]["predictedValue"] = cur / tot;  
+                        console.log(cur + "   " + tot);          
+                    }
+                    predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
                     
                 });
                 $(`#delete-${specificID}`).click(function(){
                     $(this).parent().remove();
-                    delete dictOfCategories[categoryValue];
-                    let gradePrediction = predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
-                    console.log("this is the answer" + gradePrediction);
-                    // $("#overall-grade").text(gradePrediction);
+                    delete dictOfCategories[categoryValue]["assignments"][specificID];
+                    if($(`#predicted-num-${categoryValue}`).val()==""){
+                        let cur = 0;
+                        let tot = 0;
+                        for(let asig in dictOfCategories[categoryValue]["assignments"]){
+                            cur += Number(dictOfCategories[categoryValue]["assignments"][asig][0]);
+                            tot += Number(dictOfCategories[categoryValue]["assignments"][asig][1]);
+                        }
+                        $(`predicted-num-${categoryValue}`) .val(cur/tot);    
+                        dictOfCategories[categoryValue]["predictedValue"] = cur / tot;  
+                        console.log(cur + "   " + tot);          
+                    }
+                    predict_grade_parse(dictOfCategories, $("#start-date").val(), $("#end-date").val(), Number($("#grade-goal").val())/100, $("#overall-grade"));
                 });
             });   
             $("#add-category")[0].focus();
@@ -158,7 +222,10 @@ function predict_grade_parse(dictionary, startDate, endDate, gradeGoal, overall)
 		futures[cat] = [];
 		remaining_avg[cat] = dictionary[cat]["predictedValue"];
 		for(let asig in dictionary[cat]["assignments"]){
-			if(Number(dictionary[cat]["assignments"][asig][0]==-1)){
+            if(Number(dictionary[cat]["assignments"][asig][1])==0){
+				overall.text("Grade needed %");
+			}
+			if(Number(dictionary[cat]["assignments"][asig][0])==-1){
 				futures[cat].push(Number(dictionary[cat]["assignments"][asig][1]));
 			}
 			else{
@@ -170,8 +237,20 @@ function predict_grade_parse(dictionary, startDate, endDate, gradeGoal, overall)
 		}
 	}
     let answer = predict_grade(semesterProgress, gradeables, futures, remaining_avg, predict_cats, gradeGoal);
-    overall.text("Grade needed: "+answer)
-	return answer;
+    let cats = "";
+    for(let cat in predict_cats){
+        cats += predict_cats[cat]+", ";
+    }
+    cats = cats.substring(0, cats.length-2);
+    if(Number(answer)>100){
+        overall.text("You cannot obtain this grade without earning extra credit.");
+    }
+    else if(Number(answer)<0){
+        overall.text("Average grade needed on " + cats + ": 0%");
+    }
+    else{
+        overall.text("Average grade needed on " + cats + ": "+answer + "%");
+    }
 }
 
 
@@ -233,8 +312,6 @@ function predict_grade(
 	let required_tot = tot_points * grade_goal;
 	let required_rem = required_tot - expected_subscore;
 	let required_avg = required_rem / (tot_points - possible_subscore);
-
-	console.log("final output: " + (required_avg*100).toFixed(1) + "%");
-	
-	return (required_avg*100).toFixed(1) + "%";
+    	
+	return (required_avg*100).toFixed(1);
 }

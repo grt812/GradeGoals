@@ -138,6 +138,10 @@ input[type="text"]::placeholder {
     color: rgb(230, 230, 230);
 }
 
+input[type="text"].hidden{
+    display: none !important;
+}
+
 button{
     /* linear-gradient(90deg, rgba(179,26,188,1) 0%, rgba(255,0,0,1) 100%); */
     background: #0dc8b0; 
