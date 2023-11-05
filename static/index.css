@@ -19,6 +19,14 @@ body {
     /*  */
 }
 
+
+#overall-grade-container{
+    background-color: var(--light-green);
+    padding: 50px;
+    border-radius: 10px;
+    margin: 50px;
+}
+
 header{
     display: flex;
     /* padding: 20px; */
@@ -184,6 +192,22 @@ button:active{
 
 .d-flex{
     display: flex;
+}
+
+.flex-grow-2{
+    flex-grow: 2;
+}
+
+.flex-grow-1{
+    flex-grow: 1;
+}
+
+input[type="date"]{
+    background: transparent;
+    border: white;
+    padding: 5px;
+    border-bottom: 2px solid white;
+    outline: 0;
 }
 
 .switch {
